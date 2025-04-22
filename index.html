@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Safesip | Log Water Sample</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e8f5e9;
+            margin: 0;
+        }
+
+        nav {
+            background: #2e7d32;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        label,
+        input,
+        select {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f8e9;
+            border-left: 5px solid #8bc34a;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #c8e6c9;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">Safesip</div>
+        <div class="nav-links">
+            <a href="about.html">Home</a>
+            <a href="index.html">Log Sample</a>
+            <a href="tips.html">Tips</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Log Water Sample</h2>
+        <label>Date:</label>
+        <input type="date" id="date" />
+        <label>Source:</label>
+        <select id="source">
+            <option value="">-- Select Source --</option>
+            <option value="Well">Well</option>
+            <option value="River">River</option>
+            <option value="Tap">Tap</option>
+            <option value="Rain">Rain</option>
+        </select>
+        <label>Location:</label>
+        <input type="text" id="location" placeholder="e.g. Addis Ababa" />
+        <label>pH Level:</label>
+        <input type="number" id="ph" step="0.1" min="0" max="14" />
+        <label>Turbidity (NTU):</label>
+        <input type="number" id="turbidity" step="0.1" min="0" />
+        <button onclick="logSample()">Log Sample</button>
+        <div class="result" id="resultBox"></div>
+        <table id="samplesTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Source</th>
+                    <th>Location</th>
+                    <th>pH</th>
+                    <th>Turbidity</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        function logSample() {
+            const date = document.getElementById("date").value;
+            const source = document.getElementById("source").value;
+            const location = document.getElementById("location").value;
+            const ph = parseFloat(document.getElementById("ph").value);
+            const turbidity = parseFloat(document.getElementById("turbidity").value);
+            const resultBox = document.getElementById("resultBox");
+
+            if (!date || !source || !location || isNaN(ph) || isNaN(turbidity)) {
+                resultBox.innerText = "⚠️ Please fill in all fields.";
+                return;
+            }
+
+            const status = (ph >= 6.5 && ph <= 8.5 && turbidity <= 5) ? "✅ Good" : "⚠️ Poor";
+            resultBox.innerText = status.includes("Good") ? "✅ Water is Good" : "⚠️ Water may be unsafe. Contact mentioned NGOs";
+            resultBox.style.display = "block";
+
+            const row = `<tr>
+        <td>${date}</td><td>${source}</td><td>${location}</td>
+        <td>${ph}</td><td>${turbidity}</td><td>${status}</td>
+      </tr>`;
+            document.querySelector("#samplesTable tbody").innerHTML += row;
+
+            document.getElementById("date").value = "";
+            document.getElementById("source").value = "";
+            document.getElementById("location").value = "";
+            document.getElementById("ph").value = "";
+            document.getElementById("turbidity").value = "";
+        }
+    </script>
+</body>
+
+</html>
